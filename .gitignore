@@ -13,6 +13,8 @@ bin/
 # deps
 node_modules/
 
+.git
+.DS_Store
 
 # vs code
 .history

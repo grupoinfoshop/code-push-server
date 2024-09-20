@@ -1,16 +1,15 @@
 version: '3.7'
 services:
   server:
-    image: shmopen/code-push-server:latest
+    image: code-push-server
     volumes:
       - data-storage:/data/storage
-      - data-tmp:/data/tmp
     environment:
-      DOWNLOAD_URL: 'http://YOUR_MACHINE_IP:3000/download'
+      DOWNLOAD_URL: 'http://localhost:3000/download'
       TOKEN_SECRET: 'YOUR_JWT_TOKEN_SECRET'
-      RDS_HOST: 'mysql'
-      RDS_USERNAME: 'codepush'
-      RDS_PASSWORD: '123456'
+      RDS_HOST: 'db'
+      RDS_USERNAME: 'root'
+      RDS_PASSWORD: 'lepYSeG4QoSe'
       RDS_DATABASE: 'codepush'
       STORAGE_DIR: '/data/storage'
       DATA_DIR: '/data/tmp'
@@ -21,19 +20,52 @@ services:
     depends_on:
       - mysql
       - redis
+    networks:
+      - REDE1
   mysql:
-    image: mysql:latest
+    image: bitnami/mysql:latest
+    hostname: db
     volumes:
       - data-mysql:/var/lib/mysql
-      - ./sql/codepush-all-docker.sql:/docker-entrypoint-initdb.d/codepush-all.sql
     environment:
       MYSQL_ALLOW_EMPTY_PASSWORD: 'On'
+      MYSQL_ROOT_PASSWORD: 'lepYSeG4QoSe'
+    ports:
+      - 3306:3306
+    networks:
+      - REDE1
+  phpmyadmin:
+    image: phpmyadmin:5.1
+    environment:
+      PMA_HOST: db
+      MAX_EXECUTION_TIME: 300
+      MEMORY_LIMIT: 256M
+      UPLOAD_LIMIT: 64M
+    ports:
+      - 8080:80
+    networks:
+      - REDE1
   redis:
     image: redis:latest
+    hostname: redis
     volumes:
       - data-redis:/data
+    ports:
+      - 6379:6379
+    networks:
+      - REDE1
 volumes:
   data-storage:
-  data-tmp:
+    external: true
+    name: data-storage
   data-mysql:
+    external: true
+    name: data-mysql
   data-redis:
+    external: true
+    name: data-redis
+  
+networks:
+  REDE1:
+    external: true
+    name: REDE1

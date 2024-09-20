@@ -30,9 +30,9 @@ export const config = {
     // Config for database, only support mysql.
     db: {
         username: process.env.RDS_USERNAME || 'root',
-        password: process.env.RDS_PASSWORD || 'password',
+        password: process.env.RDS_PASSWORD || 'lepYSeG4QoSe',
         database: process.env.RDS_DATABASE || 'codepush',
-        host: process.env.RDS_HOST || '127.0.0.1',
+        host: process.env.RDS_HOST || 'db',
         port: toNumber(process.env.RDS_PORT, 3306),
         dialect: 'mysql',
         logging: false,
@@ -105,7 +105,7 @@ export const config = {
         // data dir for caclulate diff files. it's optimization.
         dataDir: process.env.DATA_DIR || os.tmpdir(),
         // storageType which is your binary package files store. options value is ("local" | "qiniu" | "s3"| "oss" || "tencentcloud")
-        storageType: (process.env.STORAGE_TYPE || 'local') as
+        storageType: (process.env.STORAGE_TYPE || 's3') as
             | 'local'
             | 'qiniu'
             | 's3'

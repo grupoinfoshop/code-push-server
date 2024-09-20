@@ -1,15 +1,20 @@
+# Usar a imagem base Node.js com Alpine Linux
 FROM node:lts-alpine
-
-ARG VERSION latest
-
-RUN npm install -g @grupoinfoshop/code-push-server@${VERSION} pm2@latest --no-optional
 
 RUN mkdir /data/
 
-WORKDIR /data/
+ARG VERSION=latest
 
-COPY ./process.json /data/process.json
+WORKDIR /app
 
- # CMD ["pm2-runtime", "/data/process.json"]
- # workaround for issue https://github.com/Unitech/pm2/issues/4950
- CMD ["sh", "-c", "pm2 ps && pm2-runtime /data/process.json"]
+COPY package.json .
+
+RUN npm install
+
+COPY . . 
+
+RUN npm run build
+
+EXPOSE 3000
+
+CMD ["sh", "-c", "npm run start"]

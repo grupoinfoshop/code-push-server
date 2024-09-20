@@ -1,5 +1,8 @@
-# Usar a imagem base Node.js com Alpine Linux
 FROM node:lts-alpine
+
+RUN apk add --no-cache tzdata
+
+ENV TZ=America/Campo_Grande
 
 RUN mkdir /data/
 
